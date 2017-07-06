@@ -77,29 +77,14 @@ function showItemList(){
 			else {
 				console.log("There are not enough products in storage. Try back later!")
 			}
+			purchaseMore(total);
 		});	
-		// checkQuantity();	
 	});
 	});
 }
 showItemList();
 
-// function checkQuantity(){
-// 	if (stockQuantity >= productQuantity){
-// 		console.log("successfully added to cart");
-			
-// 		connection.query(
-//             "UPDATE products SET ? WHERE ?", [{stock_quantity: newProdQuant}, {item_id: selectedItem}],function(error) {
-//               if (error) throw error;
-// 		});		
-// 	}
-
-// 	else {
-// 		console.log("there are not enough products in storage. try back later")
-// 	}
-// }
-
-function purchaseMore(){
+function purchaseMore(total){
 	inquirer.prompt([
 		{
 			name: "addMoreItems",
@@ -113,7 +98,7 @@ function purchaseMore(){
 		}
 
 		else {
-			console.log("You're total comes to: " + total);
+			console.log("You're total comes to: $"+total);
 		}
 	});
 }
