@@ -46,95 +46,114 @@ function menu(){
 		}
 	});
 }
+menu();
 
 function menu_viewProd(){
 	connection.query("SELECT * FROM products", function(err, res) {
 		if (err) throw err;
 
-	inquirer.prompt([
-		{
-			name: "viewProducts",
-			type: "list",
-			message: "Which Product Id would you like to purchase?",
-			choices: function(){
-				var choices =[];
-			    for (var i = 0; i < res.length; i++) {
-		        	choices.push(res[i].item_id+": " +res[i].product_name+ " $" +res[i].price)
-		    	}
-				return choices
+		inquirer.prompt([
+			{
+				name: "viewProducts",
+				type: "list",
+				message: "Available products",
+				choices: function(){
+					var choices =[];
+				    for (var i = 0; i < res.length; i++) {
+			        	choices.push(res[i].item_id+": " +res[i].product_name+ "  Price: $" +res[i].price+ "  Quantity: "+res[i].stock_quantity)
+			    	}
+					return choices
+				}
 			}
-		}
 
-	]).then(function(answers){
+		]).then(function(answers){
+			// console.log(answers);
+		});
 	});
 }
 
 function menu_viewLowInv(){
 	connection.query("SELECT * FROM products", function(err, res) {
 		if (err) throw err;
+		for (var i = 0; i < res.length; i++) {
+	        
+	        if (res[i].stock_quantity < 5) {
+	        	console.log(res[i].product_name+ "is low!")
+	        }
 
-	inquirer.prompt([
-		{
-			name: "viewLowInventory",
-			type: "input",
-			message: "How many units would you like to buy?"
-		}
-		
-	]).then(function(answers){
+	        else if (res[i].stock_quantity > 5) {
+	        	console.log(res[i].product_name+ "is in stock!")
+	        }	
+	    }
 	});
 }
 
-function menu_addInv(){
-	connection.query("SELECT * FROM products", function(err, res) {
-		if (err) throw err;
+function menu_addProd(){
 
 	inquirer.prompt([
 		{
 			name: "addInventory",
 			type: "input",
-			message: "How many units would you like to buy?"
+			message: "What product would you like to add?",
+		},
+
+		{
+			name: "whichDepartment",
+			type: "input",
+			message: "Which department does your item below in?",
+			when: function(answers){
+				return answers.addInventory
+			}
+		},
+
+		{
+			name: "howMuch",
+			type: "input",
+			message: "How much does your product cost?",
+			when: function(answers){
+				return answers.whichDepartment
+			}
+		},
+
+		{
+			name: "quantity",
+			type: "input",
+			message: "How many products do you want to add to stock inventory?",
+			when: function(answers){
+				return answers.howMuch
+			}
 		}
 		
 	]).then(function(answers){
+		var newProd = answers.addInventory;
+		var newProdDept = answers.whichDepartment;
+		var newProdPrice= answers.howMuch;
+		var newProdQuant = answers.quantity;
+
+		connection.query("INSERT INTO products SET ?", {
+			product_name: newProd,
+			department_name: newProdDept,
+			price: newProdPrice,
+			stock_quantity: newProdQuant,
+		}, function(err, res) {
+		if (err) throw err;
+		console.log(newProd+ " has been added to inventory!")
+		});
 	});
 }
 
-function menu_addProd(){
-	connection.query("SELECT * FROM products", function(err, res) {
-		if (err) throw err;
+function menu_addInv(){
+	menu_viewProd();
 
 	inquirer.prompt([
 		{
-			name: "addProduct",
+			name: "addProductInventory",
 			type: "input",
-			message: "How many units would you like to buy?"
+			message: "How many units would you like to add?"
 		}
 		
 	]).then(function(answers){
+		var addedNumber = answers.addProductInventory;
+		console.log(addedNumber);
 	});
 }
-
-		// {
-		// 	name: "viewLowInventory",
-		// 	type: "input",
-		// 	message: "How many units would you like to buy?",
-		// 	when: function(answers){
-		// 		return answers.productId
-		// 	}
-		// },
-		// {
-		// 	name: "addInventory",
-		// 	type: "input",
-		// 	message: "How many units would you like to buy?",
-		// 	when: function(answers){
-		// 		return answers.productId
-		// 	}
-		// },
-		// {
-		// 	name: "addProduct",
-		// 	type: "input",
-		// 	message: "How many units would you like to buy?",
-		// 	when: function(answers){
-		// 		return answers.productId
-		// 	}
-		// }
