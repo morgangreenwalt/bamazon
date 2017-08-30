@@ -61,10 +61,10 @@ function showItemList(){
 			productPrice = parseInt(res[0].price);
 			total = productQuantity * productPrice;
 			
-			console.log(stockQuantity);
-			console.log(newProdQuant);
-			console.log(productPrice);
-			console.log(total);
+			// console.log(stockQuantity);
+			// console.log(newProdQuant);
+			// console.log(productPrice);
+			// console.log(total);
 
 			if (stockQuantity >= productQuantity){
 				console.log("Successfully added to your cart!");
