@@ -1,7 +1,7 @@
 Bamazon
 -------
 
-An interactive node applicationshopping allowing users to purchase items as a customer, view, track and update the product inventory as a manager, and track the total sales by department as an supervisor.
+An interactive node application allowing users to purchase items as a customer, view, track and update the product inventory as a manager, and track the total sales by department as an supervisor.
 
 Technologies used:
 1. Node.js
